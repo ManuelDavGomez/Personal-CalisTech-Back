@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import { pool } from "./app/database/connection.js";
-import authRoutes from "./app/routes/authRoutes.js";
+import authRoutes from "./app/routes/auth.routes.js";
+import taskRoutes from "./app/routes/task.routes.js";
 
 const app = express();
 app.use(cors());
@@ -12,6 +13,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/exercises", taskRoutes);
 
 pool.connect().then(() => {
   app.listen(3000, () => {
