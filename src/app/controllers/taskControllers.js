@@ -2,14 +2,19 @@ import { pool } from "../database/connection.js";
 
 export const getExercises = async (req, res) => {
   try {
-    const { musculos, dificultad } = req.query;
+    const { musculos, dificultad, texto, pasos } = req.query;
 
     let query = `SELECT * FROM skills WHERE 1=1`;
     const values = [];
 
+    if (texto) {
+      values.push(`%${texto}%`);
+      query += ` AND nombre ILIKE $${values.length}`;
+    }
+
     if (musculos) {
       values.push(musculos);
-      query += ` AND musculos = $${values.length}`;
+      query += ` AND $${values.length} = ANY(musculos)`;
     }
 
     if (dificultad) {
