@@ -1,7 +1,12 @@
 import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
-  const token = req.headers["authorization"]?.split(" ")[1];
+  const cookie = req.headers.cookie
+    ?.split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith("calistech_session="));
+  const cookieToken = cookie ? cookie.slice("calistech_session=".length) : null;
+  const token = cookieToken || req.headers["authorization"]?.split(" ")[1];
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
   }
